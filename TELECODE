@@ -1,0 +1,23 @@
+##Template Matching
+ #Template matching with cross-correlation between the image and template
+face_image=misc.face(gray=True)-misc.face(gray=True).mean()
+template_image=np.copy(face_image[300:365,670:750])
+#righteye
+template_image-=template_image.mean()
+face_image=face_image+np.random.randn(*face_image.shape)*50
+#add random noise
+correlation=signal.correlate2d(face_image,template_image,boundary='symm',mode='same')
+y,x=np.unravel_index(np.argmax(correlation),correlation.shape)
+#find the match
+fig,(ax_original,ax_template,ax_correlation)=pylab.subplots(3,1,figsize=(6,15))
+ax_original.imshow(face_image,cmap='gray')
+ax_original.set_title('Original',size=20)
+ax_original.set_axis_off()
+ax_template.imshow(template_image,cmap='gray')
+ax_template.set_title('Template',size=20)
+ax_template.set_axis_off()
+ax_correlation.imshow(correlation,cmap='afmhot')
+ax_correlation.set_title('Cross-correlation',size=20)
+ax_correlation.set_axis_off()
+ax_original.plot(x,y,'ro')
+fig.show(
